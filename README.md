@@ -54,7 +54,7 @@ Output is written to `depthMapRender.mp4` in the working directory.
 
 ## Known limitations & Next Fixes
 * **Memory scales with video length.** All processed frames are held in memory as a list before the output video is encoded, instead of being written incrementally. That's fine for short clips but won't scale well to long videos.
-* **No UI. ** Currently, there is no UI. Thats ok for a quick demo, but  not only will it make the video generation process more tedious, but it will also increase the liklihood of in-code mistakes.
+* **No UI.** Currently, there is no UI. Thats ok for a quick demo, but  not only will it make the video generation process more tedious, but it will also increase the liklihood of in-code mistakes.
   
 * **Frame-to-frame flicker.** Each frame's depth is estimated independently, with no temporal consistency between frames. This is a known limitation of naive per-frame monocular depth estimation on video. Individual frames are accurate, but the sequence can flicker slightly.
 * **No camera intrinsics or 3D reconstruction yet.** This pipeline stops at 2D depth-map video generation. Extending frame-wise depth into a registered 3D point cloud or mesh is a natural next step and something I'm actively exploring.
