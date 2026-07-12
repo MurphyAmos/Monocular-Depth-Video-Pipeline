@@ -40,7 +40,7 @@ Processing is sequential and frame by frame, with no batching, so there's no dis
 ## Setup
 
 ```bash
-pip install opencv-python transformers accelerate pillow numpy torch
+pip install -r requirements.txt
 ```
 
 Set your HuggingFace token as an environment variable instead of hardcoding it in the script:
