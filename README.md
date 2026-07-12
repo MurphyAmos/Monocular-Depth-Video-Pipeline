@@ -39,17 +39,25 @@ Processing is sequential and frame by frame, with no batching, so there's no dis
 
 ## Setup
 
+Clone the repository:
+
+```bash
+git clone https://github.com/MurphyAmos/Monocular-Depth-Video-Pipeline.git
+cd Monocular-Depth-Video-Pipeline
+```
+
+Install dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
 
-Set your HuggingFace token as an environment variable instead of hardcoding it in the script:
+Set your Hugging Face token:
 
 ```bash
 export HF_TOKEN="your_token_here"      # macOS/Linux
 setx HF_TOKEN "your_token_here"        # Windows
 ```
-
 ```python
 import os
 os.environ["HF_TOKEN"] = os.environ.get("HF_TOKEN")
