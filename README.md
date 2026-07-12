@@ -27,6 +27,7 @@ Processing is sequential and frame by frame, with no batching, so there's no dis
     <td align="center">Depth-Map Output</td>
   </tr>
 </table>
+
 ## Tech stack
 
 * Python
