@@ -50,7 +50,7 @@ Update the video path in `frame_to_depthMap()` to point to your source file, the
 python depth_video.py
 ```
 
-Output is written to `depthMapsd33.mp4` in the working directory.
+Output is written to `depthMapRender.mp4` in the working directory.
 
 ## Known limitations & Next Fixes
 * **Memory scales with video length.** All processed frames are held in memory as a list before the output video is encoded, instead of being written incrementally. That's fine for short clips but won't scale well to long videos.
