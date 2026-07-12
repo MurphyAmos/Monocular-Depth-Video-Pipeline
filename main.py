@@ -15,8 +15,9 @@ pipe = pipeline(
     model="depth-anything/Depth-Anything-V2-Small-hf",
 )
 def frame_to_depthMap():
+    #input video Path HERE 
     vid = cv2.VideoCapture("{Input Video File Name Here}")
-# Get resolution using properties
+    # Get resolution using properties
     width = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
     width = (int((width)*.75))
 
