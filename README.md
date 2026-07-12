@@ -15,6 +15,18 @@ Video is just a sequence of images, so this project takes that idea literally. E
 
 Processing is sequential and frame by frame, with no batching, so there's no discontinuity introduced at batch boundaries. Depth is still estimated independently per frame.
 
+## Demo
+
+<table>
+  <tr>
+    <td><img src="demos/original.gif" width="400"/></td>
+    <td><img src="demos/depth.gif" width="400"/></td>
+  </tr>
+  <tr>
+    <td align="center">Original</td>
+    <td align="center">Depth-Map Output</td>
+  </tr>
+</table>
 ## Tech stack
 
 * Python
