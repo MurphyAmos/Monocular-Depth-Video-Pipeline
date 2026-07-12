@@ -27,7 +27,7 @@ def frame_to_depthMap():
     frame_list,depth_map_list = [], []
    
 
-    batch_count, count, success =0, 0, True
+    count, success = 0, True
     while success:
         success, image = vid.read() # Read frame
         if success:
