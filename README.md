@@ -44,7 +44,7 @@ os.environ["HF_TOKEN"] = os.environ.get("HF_TOKEN")
 
 ## Usage
 
-Update the video path in `frame_to_depthMap()` to point to your source file, then run:
+Update the 'vid' variable in `frame_to_depthMap()` (line 19) to point to your source file, then run:
 
 ```bash
 python depth_video.py
