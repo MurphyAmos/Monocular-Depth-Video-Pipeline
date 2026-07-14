@@ -14,17 +14,17 @@ pipe = pipeline(
     model="depth-anything/Depth-Anything-V2-Small-hf",
 )
 def frame_to_depthMap():
-    #input video Path HERE 
-    vid = cv2.VideoCapture("{Input Video File Name Here}")
-    # Get resolution using properties
+    vid = cv2.VideoCapture("IMG_3165.mov")
+# Get resolution using properties
     width = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
     width = (int((width)*.75))
 
     height = int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
     height = (int((height)*.75))
     fps = int(vid.get(cv2.CAP_PROP_FPS))
-    frame_list,depth_map_list = [], []
-   
+    
+    video_name = 'depthMapsd33.mp4'
+    video = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'mp4v'), int(fps), (width, height))
 
     count, success = 0, True
     while success:
@@ -35,28 +35,23 @@ def frame_to_depthMap():
             
             # Convert to PIL Image to send to predictions 
             pil_image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-            frame_list.append(pil_image)
 
-            #call predictions upon PIL image 
+            #make predictions on it
+            
             predictions = pipe(pil_image)
-            #update the count of predictions and print it out/ current frame count
             count+=1
             print(count)
             depth_map = predictions["depth"]
             ##make a color array for depthmap
             depth_map = np.array(depth_map) 
             depth_map_color = cv2.cvtColor(depth_map, cv2.COLOR_GRAY2BGR)
-            #append depthmap image to list
-            depth_map_list.append(depth_map_color)
-            
-    video_name = 'depthMapRender.mp4'
-    video = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'mp4v'), int(fps), (width, height))
-    #loop through list of images of depthmaps to video
-    for depth_map in depth_map_list:
-        video.write(depth_map)
+            video.write(depth_map_color)
+
+    #the video is now a third of the total frames 
+    #look at depthmap list and save each one as a video frame
     vid.release()
     video.release()
-    #this is just incase :)
     cv2.destroyAllWindows()
     print("Video generated successfully!")
 frame_to_depthMap()
+
