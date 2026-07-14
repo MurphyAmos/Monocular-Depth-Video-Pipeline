@@ -47,7 +47,6 @@ def frame_to_depthMap():
             depth_map_color = cv2.cvtColor(depth_map, cv2.COLOR_GRAY2BGR)
             video.write(depth_map_color)
 
-    #the video is now a third of the total frames 
     #look at depthmap list and save each one as a video frame
     vid.release()
     video.release()
