@@ -80,6 +80,9 @@ Output is written to `depthMapRender.mp4` in the working directory.
 * **Frame-to-frame flicker.** Each frame's depth is estimated independently, with no temporal consistency between frames. This is a known limitation of naive per-frame monocular depth estimation on video. Individual frames are accurate, but the sequence can flicker slightly.
 * **No camera intrinsics or 3D reconstruction yet.** This pipeline stops at 2D depth-map video generation. Extending frame-wise depth into a registered 3D point cloud or mesh is a natural next step and something I'm actively exploring.
 
+##  Fixed & Updates
+* **Memory Scaling with Length.** Video encoding now happens on a per-frame bases instead of buffering all frames in memory. This keeps memory usage flat regardless of video length, allowing the pipeline to scale to much longer videos without running out of memory.
+
 ## Motivation
 
 This started as an extension of a separate point-cloud and 3D reconstruction project. After working with depth maps on static images, the natural question was whether the same approach could be applied across an entire video, frame by frame, instead of just one frame at a time.
