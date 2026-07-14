@@ -15,7 +15,7 @@ pipe = pipeline(
 )
 def frame_to_depthMap():
     vid = cv2.VideoCapture("{ORIGINAL_VIDEO}")
-# Get resolution using properties
+    # Get resolution using properties
     width = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
     width = (int((width)*.75))
 
@@ -47,7 +47,7 @@ def frame_to_depthMap():
             depth_map_color = cv2.cvtColor(depth_map, cv2.COLOR_GRAY2BGR)
             video.write(depth_map_color)
 
-    #look at depthmap list and save each one as a video frame
+    #close all windows
     vid.release()
     video.release()
     cv2.destroyAllWindows()
