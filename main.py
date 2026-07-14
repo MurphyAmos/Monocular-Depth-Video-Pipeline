@@ -14,7 +14,7 @@ pipe = pipeline(
     model="depth-anything/Depth-Anything-V2-Small-hf",
 )
 def frame_to_depthMap():
-    vid = cv2.VideoCapture("IMG_3165.mov")
+    vid = cv2.VideoCapture("{ORIGINAL_VIDEO}")
 # Get resolution using properties
     width = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
     width = (int((width)*.75))
@@ -23,7 +23,7 @@ def frame_to_depthMap():
     height = (int((height)*.75))
     fps = int(vid.get(cv2.CAP_PROP_FPS))
     
-    video_name = 'depthMapsd33.mp4'
+    video_name = '{OUTPUT_VIDEO}'
     video = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'mp4v'), int(fps), (width, height))
 
     count, success = 0, True
