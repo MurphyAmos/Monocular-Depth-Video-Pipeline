@@ -46,6 +46,10 @@ def frame_to_depthMap():
             depth_map = np.array(depth_map) 
             depth_map_color = cv2.cvtColor(depth_map, cv2.COLOR_GRAY2BGR)
             video.write(depth_map_color)
+            #return live video feed through cv... will be used for streaming
+            cv2.imshow('Live Stream',depth_map_color)
+            if cv2.waitKey(1) & 0xFF == ord('q'):  # Press 'q' to quit
+                break
 
     #close all windows
     vid.release()
