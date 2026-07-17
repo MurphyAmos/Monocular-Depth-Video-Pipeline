@@ -82,7 +82,7 @@ Output is written to `depthMapRender.mp4` in the working directory.
 
 ##  Fixed & Updates
 * **Real Time Streaming.**  Depth Map Generation is now fed to live video feed for a Live Video feed
-* 
+  
 * **Memory Scaling with Length.** Video encoding now happens on a per-frame bases instead of buffering all frames in memory. This keeps memory usage flat regardless of video length, allowing the pipeline to scale to much longer videos without running out of memory.
 
 ## Motivation
