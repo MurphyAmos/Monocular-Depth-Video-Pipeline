@@ -81,6 +81,7 @@ Output is written to `depthMapRender.mp4` in the working directory.
 * **No camera intrinsics or 3D reconstruction yet.** This pipeline stops at 2D depth-map video generation. Extending frame-wise depth into a registered 3D point cloud or mesh is a natural next step and something I'm actively exploring.
 
 ##  Fixed & Updates
+* **Real Time Streaming.**  Depth Map Generation is now fed to live video feed for a Live Video feed
 * **Memory Scaling with Length.** Video encoding now happens on a per-frame bases instead of buffering all frames in memory. This keeps memory usage flat regardless of video length, allowing the pipeline to scale to much longer videos without running out of memory.
 
 ## Motivation
