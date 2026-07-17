@@ -84,7 +84,7 @@ Output is written to `depthMapRender.mp4` in the working directory.
   
 * **Memory Scaling with Length.** Video encoding now happens on a per-frame bases instead of buffering all frames in memory. This keeps memory usage flat regardless of video length, allowing the pipeline to scale to much longer videos without running out of memory.
 
-* **Real Time Streaming.**  Depth Map Generation is now fed to live video feed for a Live Video feed
+* **Real Time Streaming.**  Depth Map Generation is now fed to a live video feed as output. This will allow user to see the Depth Map Rendering process in real-time, instead of in CLI.
 ## Motivation
 
 This started as an extension of a separate point-cloud and 3D reconstruction project. After working with depth maps on static images, the natural question was whether the same approach could be applied across an entire video, frame by frame, instead of just one frame at a time.
