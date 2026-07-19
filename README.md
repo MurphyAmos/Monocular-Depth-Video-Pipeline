@@ -75,16 +75,18 @@ Output is written to `depthMapRender.mp4` in the working directory.
 
 ## Known limitations & Next Fixes
 * ~~**Memory scales with video length.** All processed frames are held in memory as a list before the output video is encoded, instead of being written incrementally. That's fine for short clips but won't scale well to long videos.~~
-* **No UI.** Currently, there is no UI. Thats ok for a quick demo, but  not only will it make the video generation process more tedious, but it will also increase the liklihood of in-code mistakes.
-  
+* **No UI.** Currently, there is no UI. That's ok for a quick demo, but not only will it make the video generation process more tedious, but it will also increase the likelihood of in-code mistakes.
+* **Memory Scaling With Video Resolution.** As the video resolution gets greater/higher in quality, the time it takes to run a depth-estimation on each frame increases. Possible fix would be down scaling all resolutions to a set "prediction-ready" resolution.
 * **Frame-to-frame flicker.** Each frame's depth is estimated independently, with no temporal consistency between frames. This is a known limitation of naive per-frame monocular depth estimation on video. Individual frames are accurate, but the sequence can flicker slightly.
 * **No camera intrinsics or 3D reconstruction yet.** This pipeline stops at 2D depth-map video generation. Extending frame-wise depth into a registered 3D point cloud or mesh is a natural next step and something I'm actively exploring.
 
 ##  Fixed & Updates
   
-* **Memory Scaling with Length.** Video encoding now happens on a per-frame bases instead of buffering all frames in memory. This keeps memory usage flat regardless of video length, allowing the pipeline to scale to much longer videos without running out of memory.
+* **Memory Scaling with Length.** Video encoding now happens on a per-frame basis instead of buffering all frames in memory. This keeps memory usage flat regardless of video length, allowing the pipeline to scale to much longer videos without running out of memory.
 
-* **Real Time Streaming.**  Depth Map Generation is now fed to a live video feed as output. This will allow user to see the Depth Map Rendering process in real-time, instead of in CLI.
+* **Frame Skipping.** Implemented frame skipping every nth frame for faster processing at the cost of stream and video frame rate. This change increased overall execution speed by ~72%, freeing up memory usage. 
+
+* **Video Streaming.** Depth Map Generation is now fed to a live video feed as an output. This will allow users to see the Depth Map Rendering process in real-time, instead of in the CLI.
 ## Motivation
 
 This started as an extension of a separate point-cloud and 3D reconstruction project. After working with depth maps on static images, the natural question was whether the same approach could be applied across an entire video, frame by frame, instead of just one frame at a time.
