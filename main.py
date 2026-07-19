@@ -1,5 +1,5 @@
 
-import os
+import os, time
 import numpy as np
 from transformers import pipeline
 from accelerate import Accelerator
@@ -14,47 +14,58 @@ pipe = pipeline(
     model="depth-anything/Depth-Anything-V2-Small-hf",
 )
 def frame_to_depthMap():
-    vid = cv2.VideoCapture("{ORIGINAL_VIDEO}")
+    preview = False
+    fc = 10
+    vid = cv2.VideoCapture("istockphoto-662628864-640_adpp_is.mp4")
+    fps = vid.get(cv2.CAP_PROP_FPS) / fc
+    video_time = vid.get(cv2.CAP_PROP_FRAME_COUNT)/vid.get(cv2.CAP_PROP_FPS)
+
     # Get resolution using properties
-    width = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
-    width = (int((width)*.75))
+    width = int(int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))*.5)
+    height = int(int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT))*.5)
 
-    height = int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    height = (int((height)*.75))
-    fps = int(vid.get(cv2.CAP_PROP_FPS))
-    
-    video_name = '{OUTPUT_VIDEO}'
-    video = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'mp4v'), int(fps), (width, height))
+    video_name = 'LinkedIn-Test-2.mp4'
+    video = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'mp4v'), fps, (width, height))
 
+    start_time = time.perf_counter()    
     count, success = 0, True
     while success:
         success, image = vid.read() # Read frame
         if success:
-            #resize images to half width
-            image = cv2.resize(image,(width, height), interpolation=cv2.INTER_AREA)
-            
-            # Convert to PIL Image to send to predictions 
-            pil_image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-
-            #make predictions on it
-            
-            predictions = pipe(pil_image)
             count+=1
-            print(count)
-            depth_map = predictions["depth"]
-            ##make a color array for depthmap
-            depth_map = np.array(depth_map) 
-            depth_map_color = cv2.cvtColor(depth_map, cv2.COLOR_GRAY2BGR)
-            video.write(depth_map_color)
-            #return live video feed through cv... will be used for streaming
-            cv2.imshow('Live Stream',depth_map_color)
-            if cv2.waitKey(1) & 0xFF == ord('q'):  # Press 'q' to quit
-                break
+            if(count % fc == 1):
+                #resize, convnert PIL, predict PIL
+                image = cv2.resize(image,(width, height), interpolation=cv2.INTER_AREA)
+                # Convert to PIL Image to send to predictions 
+                pil_image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+                predictions = pipe(pil_image)
+                depth_map = predictions["depth"]
 
-    #close all windows
+                ##make a color array for writing depth_map to video
+                depth_map = np.array(depth_map) 
+                depth_map_color = cv2.cvtColor(depth_map, cv2.COLOR_GRAY2BGR)
+                video.write(depth_map_color)
+                if preview:
+                    # Display the resulting frame in a window named 'Live Stream'
+                    cv2.imshow('Depth Feed',depth_map_color)
+                    if cv2.waitKey(1) & 0xFF == ord('q'):  # Press 'q' to quit
+                        break
+    #when no longer successfully read the video,print out execution time
+    end_time = time.perf_counter()
+    execution_time = end_time - start_time
+    print(f"Execution time: {execution_time:.4f} seconds")
+    print(f"Original Vido Time: {video_time:.4f} seconds")
+
+    #when no longer successfully read the video, release all resources
     vid.release()
     video.release()
     cv2.destroyAllWindows()
+
+    #check final video length    
+    check = cv2.VideoCapture(video_name)
+    out_duration = check.get(cv2.CAP_PROP_FRAME_COUNT) / check.get(cv2.CAP_PROP_FPS)
+    print("Output video duration: ", out_duration, " seconds")
+    check.release()
+
     print("Video generated successfully!")
 frame_to_depthMap()
-
