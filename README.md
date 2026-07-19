@@ -11,7 +11,7 @@ Video is just a sequence of images, so this project takes that idea literally. E
 1. **Frame extraction.** OpenCV (`cv2.VideoCapture`) reads the source video frame by frame and resizes each frame to reduce inference cost.
 2. **Depth inference.** Each frame is converted to a PIL image and passed through a HuggingFace `depth-estimation` pipeline running [Depth-Anything V2 (Small)](https://huggingface.co/depth-anything/Depth-Anything-V2-Small-hf), producing a per-frame depth map.
 3. **Depth map conversion.** Each predicted depth map is converted to a NumPy array and re-colored (`cv2.COLOR_GRAY2BGR`) so it can be written as a standard video frame.
-4. **Video encoding.** Once every frame has been processed, the complete list of depth maps is encoded into an output `.mp4` using `cv2.VideoWriter`, matching the original video's FPS.
+4. **Video encoding.** Depth maps are written to the output video incrementally, frame by frame, as they're generated.
 
 Processing is sequential and frame by frame, with no batching, so there's no discontinuity introduced at batch boundaries. Depth is still estimated independently per frame.
 
