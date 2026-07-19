@@ -85,7 +85,7 @@ Output is written to `depthMapRender.mp4` in the working directory.
 
 * **Frame Skipping.** Implemented frame skipping every nth frame for faster processing at the cost of stream and video frame rate. This change increased overall execution speed by ~72%, freeing up memory usage. 
 
-* **Video Streaming.** Depth Map Generation is now fed to a live video feed as an output. This will allow users to see the Depth Map Rendering process in real-time, instead of in the CLI.
+* **Live Video Streaming.** Depth Map Generation is now fed to a live video feed as an output. This will allow users to see the Depth Map Rendering process in real-time, instead of in the CLI. 
 ## Motivation
 
 This started as an extension of a separate point-cloud and 3D reconstruction project. After working with depth maps on static images, the natural question was whether the same approach could be applied across an entire video, frame by frame, instead of just one frame at a time.
