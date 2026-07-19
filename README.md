@@ -74,10 +74,10 @@ python main.py
 Output is written to `depthMapRender.mp4` in the working directory.
 
 ## Known limitations & Next Fixes
-* **Memory Scaling With Video Resolution.** As the video resolution gets greater/higher in quality, the time it takes to run a depth-estimation on each frame increases. Possible fix would be down scaling all resolutions to a set "prediction-ready" resolution.
 * **Frame-to-frame flicker.** Each frame's depth is estimated independently, with no temporal consistency between frames. This is a known limitation of naive per-frame monocular depth estimation on video. Individual frames are accurate, but the sequence can flicker slightly.
 * **No camera intrinsics or 3D reconstruction yet.** This pipeline stops at 2D depth-map video generation. Extending frame-wise depth into a registered 3D point cloud or mesh is a natural next step and something I'm actively exploring.
 * **No UI.** Currently, there is no UI. That's ok for a quick demo, but not only will it make the video generation process more tedious, but it will also increase the likelihood of in-code mistakes.
+* ~~**Memory Scaling With Video Resolution.** As the video resolution gets greater/higher in quality, the time it takes to run a depth-estimation on each frame increases. Possible fix would be down scaling all resolutions to a set "prediction-ready" resolution.~~
 * ~~**Memory scales with video length.** All processed frames are held in memory as a list before the output video is encoded, instead of being written incrementally. That's fine for short clips but won't scale well to long videos.~~
 ##  Fixed & Updates
   
