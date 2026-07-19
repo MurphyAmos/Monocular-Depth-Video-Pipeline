@@ -9,7 +9,7 @@ Video is just a sequence of images, so this project takes that idea literally. E
 ## How it works
 
 1. **Frame extraction.** OpenCV (`cv2.VideoCapture`) reads the source video frame by frame and resizes each frame to a fixed-target resolution to reduce inference cost.
-2. **Depth inference.** Each frame is converted to a PIL image and passed through a HuggingFace `depth-estimation` pipeline running [Depth-Anything V2 (Small)](https://huggingface.co/depth-anything/Depth-Anything-V2-Small-hf), producing a per-frame depth map.
+2. **Depth inference.** Every nth frame is converted to a PIL image and passed through a HuggingFace `depth-estimation` pipeline running [Depth-Anything V2 (Small)](https://huggingface.co/depth-anything/Depth-Anything-V2-Small-hf), producing a per-frame depth map.
 3. **Depth map conversion.** Each predicted depth map is converted to a NumPy array and re-colored (`cv2.COLOR_GRAY2BGR`) so it can be written as a standard video frame.
 4. **Video encoding.** Depth maps are written to the output video incrementally, frame by frame, as they're generated.
 
@@ -85,7 +85,7 @@ Output is written to `depthMapRender.mp4` in the working directory.
 
 * **Frame Skipping.** Implemented frame skipping every nth frame for faster processing at the cost of stream and video frame rate. This change increased overall execution speed by up to ~72%, freeing up memory usage. 
 
-* **Live Video Streaming.** Depth Map Generation is now fed to a live video feed as an output. This will allow users to see the Depth Map Rendering process in real-time, instead of in the CLI. Added optional live preview via preview flag, off by default for performance.
+* **Live Video Output (optional).** Depth Map Generation can now be fed to a live video feed as an output. This will allow users to see the Depth Map Rendering process in real-time instead of in the CLI, via the preview flag, off by default for performance.
 ## Motivation
 
 This started as an extension of a separate point-cloud and 3D reconstruction project. After working with depth maps on static images, the natural question was whether the same approach could be applied across an entire video, frame by frame, instead of just one frame at a time.
