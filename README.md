@@ -83,7 +83,7 @@ Output is written to `depthMapRender.mp4` in the working directory.
 * **Memory Scaling With Video Resolution.** Videos now downscale to a fixed target resolution instead of a relative percentage, keeping frame size (and memory load) consistent regardless of source resolution.
 * **Memory Scaling with Length.** Video encoding now happens on a per-frame basis instead of buffering all frames in memory. This keeps memory usage flat regardless of video length, allowing the pipeline to scale to much longer videos without running out of memory.
 
-* **Frame Skipping.** Implemented frame skipping every nth frame for faster processing at the cost of stream and video frame rate. This change increased overall execution speed by ~72%, freeing up memory usage. 
+* **Frame Skipping.** Implemented frame skipping every nth frame for faster processing at the cost of stream and video frame rate. This change increased overall execution speed by up to ~72%, freeing up memory usage. 
 
 * **Live Video Streaming.** Depth Map Generation is now fed to a live video feed as an output. This will allow users to see the Depth Map Rendering process in real-time, instead of in the CLI. Added optional live preview via preview flag, off by default for performance.
 ## Motivation
