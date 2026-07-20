@@ -34,7 +34,7 @@ def frame_to_depthMap():
 
     width = int(src_width * scale)
     height = int(src_height * scale)
-    video_name = 'LinkedIn-Test-2.mp4'
+    video_name = 'depthMapRender.mp4'
     video = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'mp4v'), fps, (width, height))
 
     start_time = time.perf_counter()    
