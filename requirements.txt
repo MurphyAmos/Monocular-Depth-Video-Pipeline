@@ -4,4 +4,4 @@ pillow
 torch
 transformers
 accelerate
- 
+time
