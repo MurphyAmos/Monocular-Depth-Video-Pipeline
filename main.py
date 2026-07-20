@@ -14,31 +14,41 @@ pipe = pipeline(
     model="depth-anything/Depth-Anything-V2-Small-hf",
 )
 def frame_to_depthMap():
-    preview = False
+    vid = cv2.VideoCapture("vlipsy-michael-jackson-michael-jackson-moonwalk-nnsXoFYU.mp4")
+    
     fc = 10
-    vid = cv2.VideoCapture("istockphoto-662628864-640_adpp_is.mp4")
     fps = vid.get(cv2.CAP_PROP_FPS) / fc
+
+    #get resolution    
     video_time = vid.get(cv2.CAP_PROP_FRAME_COUNT)/vid.get(cv2.CAP_PROP_FPS)
+    src_width = vid.get(cv2.CAP_PROP_FRAME_WIDTH)
+    src_height = vid.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    
+    #force scale each video...
+    target_max = 120
+    ##if width is bigger go on width else go on height for verticle
+    if src_width >= src_height:
+        scale = target_max / src_width
+    else:
+        scale = target_max / src_height
 
-    # Get resolution using properties
-    width = int(int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))*.5)
-    height = int(int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT))*.5)
-
-    video_name = 'depthMapRender.mp4'
+    width = int(src_width * scale)
+    height = int(src_height * scale)
+    video_name = 'LinkedIn-Test-2.mp4'
     video = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'mp4v'), fps, (width, height))
 
     start_time = time.perf_counter()    
-    count, success = 0, True
+    count, success, preview = 0, True, False
     while success:
         success, image = vid.read() # Read frame
         if success:
             count+=1
-            if(count % fc == 1):
+            if(count % fc == 0):
                 #resize, convnert PIL, predict PIL
-                image = cv2.resize(image,(width, height), interpolation=cv2.INTER_AREA)
+                image = cv2.resize(image,(width, height), interpolation=cv2.INTER_NEAREST)
+                
                 # Convert to PIL Image to send to predictions 
-                pil_image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-                predictions = pipe(pil_image)
+                predictions = pipe(Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB)))
                 depth_map = predictions["depth"]
 
                 ##make a color array for writing depth_map to video
