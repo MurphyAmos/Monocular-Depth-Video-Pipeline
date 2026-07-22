@@ -81,7 +81,7 @@ Output is written to `depthMapRender.mp4` in the working directory. Set the `pre
 
 ## Fixed & Updates
 * **Live Camera Input.** The pipeline now accepts a live webcam feed instead of a video file, running near-real-time depth estimation frame by frame, throughput-bound by inference speed.
-* **Accurate Output Framerate.** Output video framerate now reflects actual measured capture rate instead of a hardcoded value, so saved video playback speed matches reality.
+* **Accurate Output Framerate.** Output video framerate now reflects the actual measured capture rate instead of a hardcoded value, so saved video playback speed matches reality.
 * **Preview Off By Default.** Live preview via `cv2.imshow` is now opt-in through the `preview` flag rather than always-on, keeping default runs faster.
 * **Memory Scaling With Video Resolution.** Videos now downscale to a fixed target resolution instead of a relative percentage, keeping frame size (and memory load) consistent regardless of source resolution.
 * **Memory Scaling with Length.** Video encoding now happens on a per-frame basis instead of buffering all frames in memory. This keeps memory usage flat regardless of video length, allowing the pipeline to scale to much longer videos without running out of memory.
