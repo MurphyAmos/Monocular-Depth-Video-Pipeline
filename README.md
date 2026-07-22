@@ -1,19 +1,21 @@
 # Monocular Depth Video Pipeline
 
-Converts standard RGB video into a rendered depth-map video, using monocular depth estimation applied frame by frame.
+Converts a standard RGB live webcam feed, into a rendered depth-map video, using monocular depth estimation applied frame by frame.
 
 ## What it does
 
-Video is just a sequence of images, so this project takes that idea literally. Each frame of an input video is decoded, resized, and passed through a monocular depth estimation model. The resulting per-frame depth predictions are converted into images and re-encoded into a new video, producing a continuous depth-map rendering of the original footage.
+Video is just a sequence of images, so this project takes that idea literally. Each frame of an input is decoded, resized, and passed through a monocular depth estimation model. The resulting per-frame depth predictions are converted into images and re-encoded into a new video, producing a continuous depth-map rendering of the original footage.
 
 ## How it works
 
-1. **Frame extraction.** OpenCV (`cv2.VideoCapture`) reads the source video frame by frame and resizes each frame to a fixed-target resolution to reduce inference cost.
+1. **Frame capture.** OpenCV (`cv2.VideoCapture`) reads frames from a live webcam feed, and resizes each frame to a fixed-target resolution to reduce inference cost.
 2. **Depth inference.** Every nth frame is converted to a PIL image and passed through a HuggingFace `depth-estimation` pipeline running [Depth-Anything V2 (Small)](https://huggingface.co/depth-anything/Depth-Anything-V2-Small-hf), producing a per-frame depth map.
 3. **Depth map conversion.** Each predicted depth map is converted to a NumPy array and re-colored (`cv2.COLOR_GRAY2BGR`) so it can be written as a standard video frame.
-4. **Video encoding.** Depth maps are written to the output video incrementally, frame by frame, as they're generated.
+4. **Video encoding.** Depth maps are written to the output video incrementally, frame by frame, as they're generated, at an output framerate scaled to match actual capture rate.
 
 Processing is sequential and frame by frame, with no batching, so there's no discontinuity introduced at batch boundaries. Depth is still estimated independently per frame.
+
+Note: this is near-real-time when running off a live camera, not hard real-time — processing is throughput-bound by inference speed, so if inference is slower than the camera's native capture rate, the live preview will lag slightly behind what's currently in frame.
 
 ## Demo
 
@@ -31,7 +33,7 @@ Processing is sequential and frame by frame, with no batching, so there's no dis
 ## Tech stack
 
 * Python
-* OpenCV for video I/O and frame decoding/encoding
+* OpenCV for video I/O, frame decoding/encoding, and live camera capture
 * HuggingFace Transformers for the model pipeline
 * HuggingFace Accelerate for device selection (CPU/GPU)
 * Depth-Anything V2 for monocular depth estimation
@@ -64,28 +66,27 @@ os.environ["HF_TOKEN"] = os.environ.get("HF_TOKEN")
 ```
 
 ## Usage
-
-Update the 'vid' variable in `frame_to_depthMap()` (line 19) to point to your source file, then run:
-
 ```bash
 python main.py
 ```
 
-Output is written to `depthMapRender.mp4` in the working directory.
+Output is written to `depthMapRender.mp4` in the working directory. Set the `preview` flag to `True` to also view the depth map live as it's generated (off by default for performance).
 
 ## Known limitations & Next Fixes
 * **Frame-to-frame flicker.** Each frame's depth is estimated independently, with no temporal consistency between frames. This is a known limitation of naive per-frame monocular depth estimation on video. Individual frames are accurate, but the sequence can flicker slightly.
 * **No camera intrinsics or 3D reconstruction yet.** This pipeline stops at 2D depth-map video generation. Extending frame-wise depth into a registered 3D point cloud or mesh is a natural next step and something I'm actively exploring.
 * **No UI.** Currently, there is no UI. That's ok for a quick demo, but not only will it make the video generation process more tedious, but it will also increase the likelihood of in-code mistakes.
-* ~~**Memory Scaling With Video Resolution.** As the video resolution gets greater/higher in quality, the time it takes to run a depth-estimation on each frame increases. Possible fix would be down scaling all resolutions to a set "prediction-ready" resolution.~~
-* ~~**Memory scales with video length.** All processed frames are held in memory as a list before the output video is encoded, instead of being written incrementally. That's fine for short clips but won't scale well to long videos.~~
-##  Fixed & Updates
+* ~~**Memory Scaling With Video Resolution.**~~
+* ~~**Memory scales with video length.**~~
+
+## Fixed & Updates
+* **Live Camera Input.** The pipeline now accepts a live webcam feed instead of a video file, running near-real-time depth estimation frame by frame, throughput-bound by inference speed.
+* **Accurate Output Framerate.** Output video framerate now reflects actual measured capture rate instead of a hardcoded value, so saved video playback speed matches reality.
+* **Preview Off By Default.** Live preview via `cv2.imshow` is now opt-in through the `preview` flag rather than always-on, keeping default runs faster.
 * **Memory Scaling With Video Resolution.** Videos now downscale to a fixed target resolution instead of a relative percentage, keeping frame size (and memory load) consistent regardless of source resolution.
 * **Memory Scaling with Length.** Video encoding now happens on a per-frame basis instead of buffering all frames in memory. This keeps memory usage flat regardless of video length, allowing the pipeline to scale to much longer videos without running out of memory.
+* **Frame Skipping.** Implemented frame skipping every nth frame for faster processing at the cost of stream and video frame rate. This change increased overall execution speed by up to ~72%, freeing up memory usage.
 
-* **Frame Skipping.** Implemented frame skipping every nth frame for faster processing at the cost of stream and video frame rate. This change increased overall execution speed by up to ~72%, freeing up memory usage. 
-
-* **Live Video Output (optional).** Depth Map Generation can now be fed to a live video feed as an output. This will allow users to see the Depth Map Rendering process in real-time instead of in the CLI, via the preview flag, off by default for performance.
 ## Motivation
 
 This started as an extension of a separate point-cloud and 3D reconstruction project. After working with depth maps on static images, the natural question was whether the same approach could be applied across an entire video, frame by frame, instead of just one frame at a time.
