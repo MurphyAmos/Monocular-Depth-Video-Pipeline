@@ -16,9 +16,10 @@ pipe = pipeline(
 #get user camera 
 camera = cv2.VideoCapture(0)
 def frame_to_depthMap():
+    fc = 5
     #return frame and framecount
     source_fps = camera.get(cv2.CAP_PROP_FPS)/fc
-    fc = 5
+
     #get resolution    
     src_width = camera.get(cv2.CAP_PROP_FRAME_WIDTH)
     src_height = camera.get(cv2.CAP_PROP_FRAME_HEIGHT)
