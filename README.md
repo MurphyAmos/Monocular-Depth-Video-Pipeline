@@ -70,7 +70,7 @@ os.environ["HF_TOKEN"] = os.environ.get("HF_TOKEN")
 python main.py
 ```
 
-Output is written to `LinkedIn-Test-2.mp4` in the working directory. Set the `preview` flag to `True` to also view the depth map live as it's generated (off by default for performance).
+Output is written to `depthMapRender.mp4` in the working directory. Set the `preview` flag to `True` to also view the depth map live as it's generated (turn off for performance).
 
 ## Known limitations & Next Fixes
 * **Frame-to-frame flicker.** Each frame's depth is estimated independently, with no temporal consistency between frames. This is a known limitation of naive per-frame monocular depth estimation on video. Individual frames are accurate, but the sequence can flicker slightly.
@@ -81,7 +81,7 @@ Output is written to `LinkedIn-Test-2.mp4` in the working directory. Set the `pr
 
 ## Fixed & Updates
 * **Live Camera Input.** The pipeline now accepts a live webcam feed instead of a video file, running near-real-time depth estimation frame by frame, throughput-bound by inference speed.
-* **Preview On By Default.** Live preview via cv2.imshow is available through the preview flag, currently enabled by default so you can see the depth map as it's generated, keeping off runs faster.
+* **Preview On By Default.** Live preview via cv2.imshow is available through the preview flag, currently enabled by default so you can see the depth map as it's generated. Set it to False if you want faster runs without the display window.
 * **Memory Scaling With Video Resolution.** Videos now downscale to a fixed target resolution instead of a relative percentage, keeping frame size (and memory load) consistent regardless of source resolution.
 * **Memory Scaling with Length.** Video encoding now happens on a per-frame basis instead of buffering all frames in memory. This keeps memory usage flat regardless of video length, allowing the pipeline to scale to much longer videos without running out of memory.
 * **Frame Skipping.** Implemented frame skipping every nth frame for faster processing at the cost of stream and video frame rate. This change increased overall execution speed by up to ~72%, freeing up memory usage.
