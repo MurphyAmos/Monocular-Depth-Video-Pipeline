@@ -13,36 +13,34 @@ pipe = pipeline(
     device = device,
     model="depth-anything/Depth-Anything-V2-Small-hf",
 )
+#get user camera 
+camera = cv2.VideoCapture(0)
 def frame_to_depthMap():
-    vid = cv2.VideoCapture("vlipsy-michael-jackson-michael-jackson-moonwalk-nnsXoFYU.mp4")
-    
-    fc = 10
-    fps = vid.get(cv2.CAP_PROP_FPS) / fc
-
+    #return frame and framecount
+    source_fps = camera.get(cv2.CAP_PROP_FPS)/fc
+    fc = 5
     #get resolution    
-    video_time = vid.get(cv2.CAP_PROP_FRAME_COUNT)/vid.get(cv2.CAP_PROP_FPS)
-    src_width = vid.get(cv2.CAP_PROP_FRAME_WIDTH)
-    src_height = vid.get(cv2.CAP_PROP_FRAME_HEIGHT)
-    
+    src_width = camera.get(cv2.CAP_PROP_FRAME_WIDTH)
+    src_height = camera.get(cv2.CAP_PROP_FRAME_HEIGHT)
+
     #force scale each video...
-    target_max = 120
+    target_max = 480  
     ##if width is bigger go on width else go on height for verticle
     if src_width >= src_height:
         scale = target_max / src_width
     else:
         scale = target_max / src_height
-
     width = int(src_width * scale)
     height = int(src_height * scale)
-    video_name = 'depthMapRender.mp4'
-    video = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'mp4v'), fps, (width, height))
-
-    start_time = time.perf_counter()    
-    count, success, preview = 0, True, False
+    #set video parameters 
+    video_name = 'LinkedIn-Test-2.mp4'
+    video = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'mp4v'), source_fps, (width, height))
+    count, success, preview = 0, True,True
     while success:
-        success, image = vid.read() # Read frame
+        success, image = camera.read() # Read frame
         if success:
             count+=1
+            #take in every 5 frame
             if(count % fc == 0):
                 #resize, convnert PIL, predict PIL
                 image = cv2.resize(image,(width, height), interpolation=cv2.INTER_NEAREST)
@@ -54,28 +52,15 @@ def frame_to_depthMap():
                 ##make a color array for writing depth_map to video
                 depth_map = np.array(depth_map) 
                 depth_map_color = cv2.cvtColor(depth_map, cv2.COLOR_GRAY2BGR)
+                #write video as frames are processed 
                 video.write(depth_map_color)
                 if preview:
                     # Display the resulting frame in a window named 'Live Stream'
                     cv2.imshow('Depth Feed',depth_map_color)
                     if cv2.waitKey(1) & 0xFF == ord('q'):  # Press 'q' to quit
                         break
-    #when no longer successfully read the video,print out execution time
-    end_time = time.perf_counter()
-    execution_time = end_time - start_time
-    print(f"Execution time: {execution_time:.4f} seconds")
-    print(f"Original Vido Time: {video_time:.4f} seconds")
-
-    #when no longer successfully read the video, release all resources
-    vid.release()
+    #when no longer successfully read the camera, release all resources
     video.release()
     cv2.destroyAllWindows()
-
-    #check final video length    
-    check = cv2.VideoCapture(video_name)
-    out_duration = check.get(cv2.CAP_PROP_FRAME_COUNT) / check.get(cv2.CAP_PROP_FPS)
-    print("Output video duration: ", out_duration, " seconds")
-    check.release()
-
     print("Video generated successfully!")
 frame_to_depthMap()
