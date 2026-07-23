@@ -13,26 +13,24 @@ pipe = pipeline(
     device = device,
     model="depth-anything/Depth-Anything-V2-Small-hf",
 )
-#get user camera 
 camera = cv2.VideoCapture(0)
+fc = 8
+source_fps = camera.get(cv2.CAP_PROP_FPS)/fc
+#get resolution    
+src_width = camera.get(cv2.CAP_PROP_FRAME_WIDTH)
+src_height = camera.get(cv2.CAP_PROP_FRAME_HEIGHT)
+
+#force scale each video...
+target_max = 270
+##if width is bigger go on width else go on height for verticle
+if src_width >= src_height:
+    scale = target_max / src_width
+else:
+    scale = target_max / src_height
+width = int(src_width * scale)
+height = int(src_height * scale)
+
 def frame_to_depthMap():
-    fc = 2
-    source_fps = camera.get(cv2.CAP_PROP_FPS)/fc
-
-    #get resolution    
-    src_width = camera.get(cv2.CAP_PROP_FRAME_WIDTH)
-    src_height = camera.get(cv2.CAP_PROP_FRAME_HEIGHT)
-
-    #force scale each video...
-    target_max = 480
-    ##if width is bigger go on width else go on height for verticle
-    if src_width >= src_height:
-        scale = target_max / src_width
-    else:
-        scale = target_max / src_height
-    width = int(src_width * scale)
-    height = int(src_height * scale)
-
     video_name = 'LinkedIn-Test-2.mp4'
     video = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'mp4v'), source_fps, (width, height))
     count, success, preview = 0, True,True
