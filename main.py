@@ -55,8 +55,9 @@ def frame_to_depthMap():
             depth_heatmap = cv2.applyColorMap(depth_map, cv2.COLORMAP_JET)
             video.write(depth_heatmap)
             if preview:
+                combined = np.hstack((depth_heatmap, image))
                 # Display the resulting frame in a window named 'Live Stream'
-                cv2.imshow('Depth Feed',depth_heatmap)
+                cv2.imshow('Depth Feed',combined)
                 if cv2.waitKey(1) & 0xFF == ord('q'):  # Press 'q' to quit
                     break
     #when no longer successfully read the video, release all resources
