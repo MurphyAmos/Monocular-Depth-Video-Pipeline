@@ -45,7 +45,6 @@ def frame_to_depthMap():
             continue # Instantly skip to the next loop iteration
         success, image = camera.read() # Read frame
         if success:
-            # if(count % fc == 0):
             #resize, convnert PIL, predict PIL
             image = cv2.resize(image,(width, height), interpolation=cv2.INTER_NEAREST)
             
