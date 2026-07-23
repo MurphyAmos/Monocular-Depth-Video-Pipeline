@@ -53,16 +53,16 @@ def frame_to_depthMap():
             depth_map = predictions["depth"]
 
             ##make a color array for writing depth_map to video
-            depth_map = np.array(depth_map) 
-            depth_map_color = cv2.cvtColor(depth_map, cv2.COLOR_GRAY2BGR)
-        
-            video.write(depth_map_color)
+            depth_map = np.array(depth_map)
+            depth_map_grey = cv2.cvtColor(depth_map, cv2.COLOR_GRAY2BGR)
+            ##make into heat/colormap and write to frame and video
+            depth_heatmap = cv2.applyColorMap(depth_map_grey, cv2.COLORMAP_JET)
+            video.write(depth_heatmap)
             if preview:
                 # Display the resulting frame in a window named 'Live Stream'
-                cv2.imshow('Depth Feed',depth_map_color)
+                cv2.imshow('Depth Feed',depth_heatmap)
                 if cv2.waitKey(1) & 0xFF == ord('q'):  # Press 'q' to quit
                     break
-    #when no longer successfully read the video,print out execution time
     #when no longer successfully read the video, release all resources
     video.release()
     cv2.destroyAllWindows()
