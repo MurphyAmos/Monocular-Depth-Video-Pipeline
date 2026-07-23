@@ -53,10 +53,8 @@ def frame_to_depthMap():
             depth_map = predictions["depth"]
 
             ##make a color array for writing depth_map to video
-            depth_map = np.array(depth_map)
-            depth_map_grey = cv2.cvtColor(depth_map, cv2.COLOR_GRAY2BGR)
-            ##make into heat/colormap and write to frame and video
-            depth_heatmap = cv2.applyColorMap(depth_map_grey, cv2.COLORMAP_JET)
+            depth_map = np.array(depth_map) 
+            depth_heatmap = cv2.applyColorMap(depth_map, cv2.COLORMAP_JET)
             video.write(depth_heatmap)
             if preview:
                 # Display the resulting frame in a window named 'Live Stream'
